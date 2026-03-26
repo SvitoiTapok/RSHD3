@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db1
-#      POSTGRES_HOST_AUTH_METHOD: trust
+    #      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - ./db1/data:/var/lib/postgresql
     networks:
@@ -29,7 +29,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db2
-#      POSTGRES_HOST_AUTH_METHOD: trust
+    #      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - ./db2/data:/var/lib/postgresql
     networks:
@@ -39,16 +39,10 @@ services:
     image: pgpool/pgpool:latest
     ports:
       - "5432:5432"
+    volumes:
+      - ./pgpool/pgpool.conf:/config/pgpool.conf:ro
     environment:
-      PGPOOL_BACKEND_NODES: "0:db1:5432,1:db2:5432"
-      PGPOOL_PARAMS_BACKEND_HOSTNAME0: db1
-      PGPOOL_PARAMS_BACKEND_HOSTNAME1: db2
-      PGPOOL_SR_CHECK_USER: postgres
-      PGPOOL_SR_CHECK_PASSWORD: postgres
-      PGPOOL_POSTGRES_USERNAME: postgres
-      PGPOOL_POSTGRES_PASSWORD: postgres
-      PGPOOL_ADMIN_USERNAME: admin
-      PGPOOL_ADMIN_PASSWORD: adminpassword
+      PGPOOL_CONF_VOLUME: /config
     depends_on:
       - db1
       - db2
